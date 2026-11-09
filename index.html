@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novamer | Profesyonel İmza Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-dark: #0f0f12;
+        --panel-bg: #111115;
+        --border: #1e1e28;
+        --accent: #00afba;
+        --text-main: #e8e8ec;
+        --text-dim: #4a4a62;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+    .nav { background: var(--panel-bg); border-bottom: 1px solid var(--border); padding: 0 30px; height: 65px; display: flex; align-items: center; justify-content: space-between; position: fixed; width: 100%; top: 0; z-index: 100; }
+    .nav-brand { font-weight: 800; font-size: 18px; letter-spacing: 1px; }
+    .nav-brand em { color: var(--accent); font-style: normal; }
+
+    .page { display: none; height: 100vh; padding: 100px 20px 40px; flex-direction: column; align-items: center; justify-content: center; animation: pageFade 0.4s ease; overflow-y: auto; }
+    .page.active { display: flex; }
+
+    @keyframes pageFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+    .form-card { background: var(--panel-bg); border: 1px solid var(--border); padding: 40px; border-radius: 16px; width: 100%; max-width: 550px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+    .f-group { margin-bottom: 18px; }
+    .f-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; display: block; letter-spacing: 1px; }
+    .f-input { width: 100%; background: #17171f; border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 12px 15px; outline: none; font-size: 14px; transition: 0.2s; }
+    .f-input:focus { border-color: var(--accent); background: #1c1c26; }
+
+    .btn { background: var(--accent); color: #000; border: none; border-radius: 10px; padding: 16px 32px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.3s; font-size: 14px; letter-spacing: 0.5px; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 175, 186, 0.4); }
+    .btn-back { background: transparent; border: 1px solid var(--border); color: var(--text-main); margin-right: 12px; }
+
+    .preview-area { background: #fff; padding: 30px; border-radius: 8px; margin-bottom: 30px; overflow-x: auto; max-width: 100%; }
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 14px 28px; border-radius: 50px; font-weight: 700; display: none; z-index: 1000; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+    <div class="nav-brand">NOVAMER <em>İMZA OLUŞTURUCU</em></div>
+    <div id="step-info" style="font-size: 12px; color: var(--text-dim); font-weight: 600;">HOŞ GELDİNİZ</div>
+</div>
+
+<div class="page active" id="p1">
+    <div class="hero-box" style="text-align: center;">
+        <h1>Profesyonel Mail<br>İmzanızı Oluşturun.</h1>
+        <button class="btn" style="margin-top:20px" onclick="nav(2)">Hemen Oluştur</button>
+    </div>
+</div>
+
+<div class="page" id="p2">
+    <div class="form-card">
+        <h2 style="margin-bottom:25px; font-size:22px;">Personel Bilgileri</h2>
+        <div class="f-group">
+            <label class="f-label">Ad Soyad</label>
+            <input class="f-input" id="iName" type="text" value="">
+        </div>
+        <div class="f-row">
+            <div class="f-group">
+                <label class="f-label">Ünvan (TR)</label>
+                <input class="f-input" id="iTR" type="text" value="">
+            </div>
+            <div class="f-group">
+                <label class="f-label">Ünvan (EN)</label>
+                <input class="f-input" id="iEN" type="text" value="">
+            </div>
+        </div>
+        <div class="f-group">
+            <label class="f-label">E-Posta</label>
+            <input class="f-input" id="iMail" type="email" value="">
+        </div>
+        <div class="f-row">
+            <div class="f-group">
+                <label class="f-label">Cep Telefonu</label>
+                <input class="f-input" id="iMob" type="text" value="">
+            </div>
+            <div class="f-group">
+                <label class="f-label">Dahili No</label>
+                <input class="f-input" id="iExt" type="text" value="">
+            </div>
+        </div>
+        <div style="margin-top:20px; display:flex;">
+            <button class="btn btn-back" onclick="nav(1)">Geri</button>
+            <button class="btn" style="flex:1;" onclick="renderAndGo()">Önizlemeyi Gör</button>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="p3">
+    <h2 style="margin-bottom:25px;">İmzanız Hazır!</h2>
+    <div class="preview-area" id="out"></div><p style="font-size:9pt;color:#a8a8b2;max-width:720px;margin-bottom:18px;text-align:center">Outlook Classic, Montserrat yazı tipini bilgisayarda kuruluysa gösterir. Kurulu değilse otomatik Arial kullanır. Logoların görüntülenmesi internet bağlantısına bağlıdır.</p>
+    <div style="display:flex; gap:15px;">
+        <button class="btn btn-back" onclick="nav(2)">Bilgileri Düzenle</button>
+        <button class="btn" onclick="copy()">İmzayı Kopyala</button>
+    </div>
+</div>
+
+<div class="toast" id="toast">✔ Kopyalandı!</div>
+
+<script>
+function nav(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('p'+n).classList.add('active');
+    const labels = ["HOŞ GELDİNİZ", "BİLGİLERİ DOLDURUN", "SON KONTROL"];
+    document.getElementById('step-info').textContent = labels[n-1];
+}
+
+function escapeHtml(v) { return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function renderAndGo() {
+    const name = escapeHtml(document.getElementById('iName').value.trim());
+    const tr = escapeHtml(document.getElementById('iTR').value.trim());
+    const en = escapeHtml(document.getElementById('iEN').value.trim());
+    const mail = escapeHtml(document.getElementById('iMail').value.trim());
+    const mob = escapeHtml(document.getElementById('iMob').value.trim());
+    const ext = escapeHtml(document.getElementById('iExt').value.trim());
+
+    const FF_M = "Montserrat, Arial, sans-serif";
+    const FF_A = "Arial, sans-serif";
+
+    // Tüm imza yerleşimi Outlook masaüstü için iç içe tablolar ve inline CSS kullanır.
+    const line = 'font-family:Montserrat,Arial,sans-serif;font-size:9.75pt;line-height:12pt;color:#111111;mso-line-height-rule:exactly;';
+    const numbers = 'font-family:Arial,sans-serif;font-size:9.75pt;line-height:12pt;color:#111111;mso-line-height-rule:exactly;';
+    const logo = (src,w,h,alt) => `<img src="${src}" alt="${alt}" width="${w}" height="${h}" border="0" style="display:block;width:${w}px;height:${h}px;border:0;outline:none;text-decoration:none;">`;
+    const html = `
+    <table role="presentation" width="720" cellpadding="0" cellspacing="0" border="0" style="width:720px;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;background-color:#ffffff;">
+      <tr>
+        <td width="395" valign="top" style="width:395px;padding:0;vertical-align:top;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+            <tr><td style="padding:0 0 1px 0;font-family:Montserrat,Arial,sans-serif;font-size:18pt;line-height:21.75pt;mso-line-height-rule:exactly;font-weight:700;color:#111111;">${name}</td></tr>
+            <tr><td style="padding:0;font-family:Montserrat,Arial,sans-serif;font-size:9pt;line-height:11.25pt;mso-line-height-rule:exactly;font-weight:700;color:#111111;">${tr}</td></tr>
+            ${en ? `<tr><td style="padding:0;font-family:Montserrat,Arial,sans-serif;font-size:9pt;line-height:11.25pt;mso-line-height-rule:exactly;font-weight:700;color:#888888;">${en}</td></tr>` : ''}
+            ${mob ? `<tr><td style="${line}"><b>C:</b> <span style="${numbers}">${mob}</span></td></tr>` : ''}
+            <tr><td style="${line}"><b>T:</b> <span style="${numbers}">0 232 241 15 55${ext ? '-' + ext : ''}</span></td></tr>
+            <tr><td style="${line}"><b>F:</b> <span style="${numbers}">0 232 241 40 50</span></td></tr>
+            <tr><td style="${line}"><a href="mailto:${mail}" style="font-family:Montserrat,Arial,sans-serif;font-size:9.75pt;line-height:12pt;color:#111111;font-weight:bold;text-decoration:underline;">${mail}</a></td></tr>
+            <tr><td height="7" style="height:7px;font-size:1px;line-height:7px;">&nbsp;</td></tr>
+            <tr><td style="${line}font-weight:bold;">Satış ve Servis:</td></tr>
+            <tr><td style="${line}">Meriç mahallesi Fatih Caddesi</td></tr>
+            <tr><td style="${line}">No:107 Bornova / İzmir</td></tr>
+            <tr><td style="${line}font-weight:bold;">Hasar Servisi ve Spoticar:</td></tr>
+            <tr><td style="${line}">Karacaoğlan Mahallesi Kemalpaşa caddesi</td></tr>
+            <tr><td style="${line}">No:297 Bornova / İzmir</td></tr>
+          </table>
+        </td>
+        <td width="325" valign="bottom" style="width:325px;padding:0 0 0 5px;vertical-align:bottom;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+            <tr>
+              <td valign="middle" style="padding:0 12px 0 0;">${logo('https://imzaolustur.imbt.net/images/siyahlogo.png',115,26,'Novamer')}</td>
+              <td width="3" height="35" style="width:3px;height:35px;background-color:#777777;font-size:1px;line-height:1px;">&nbsp;</td>
+              <td width="12" style="width:12px;font-size:1px;">&nbsp;</td>
+              <td valign="middle" style="padding:0 7px 0 0;">${logo('https://i.ibb.co/RTx4j9XR/citroen.png',35,35,'Citroen')}</td>
+              <td valign="middle" style="padding:0 7px 0 0;">${logo('https://i.ibb.co/ZRvc6ZC7/peogeot.png',35,35,'Peugeot')}</td>
+              <td valign="middle" style="padding:0 7px 0 0;">${logo('https://i.ibb.co/5W1jXY8h/opel.png',35,35,'Opel')}</td>
+              <td width="35" height="35" valign="middle" align="center" style="width:35px;height:35px;padding:0;text-align:center;vertical-align:middle;"><img src="https://i.ibb.co/zTdpYZfM/spoticar.png" alt="Spoticar" width="35" border="0" style="display:block;width:35px;height:auto;border:0;outline:none;text-decoration:none;"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`;
+
+    document.getElementById('out').innerHTML = html;
+    nav(3);
+}
+
+function copy() {
+    const out = document.getElementById('out');
+    const range = document.createRange();
+    range.selectNode(out.firstElementChild);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    const copied = document.execCommand('copy');
+    if (!copied) { alert("Kopyalama başarısız. İmzayı seçip Ctrl+C ile kopyalayın."); return; }
+    const t = document.getElementById('toast');
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 3000);
+}
+</script>
+</body>
+</html>
